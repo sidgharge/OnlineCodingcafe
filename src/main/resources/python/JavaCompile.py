@@ -1,11 +1,13 @@
 import subprocess
 import sys
+import os
 from subprocess import STDOUT,PIPE
 
 def compile_java(java_file):
    # print ("before code compile ")
-    print(java_file)
+   # print(java_file)
     cmd = 'javac ' + java_file
+    print(cmd)
     proc = subprocess.Popen(cmd,shell=True,  stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     out, err = proc.communicate()

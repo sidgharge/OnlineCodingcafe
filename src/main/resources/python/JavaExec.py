@@ -2,10 +2,10 @@ import subprocess
 import sys
 from subprocess import STDOUT,PIPE
 
-def execute_java(java_file):
-    print (java_file)
+def execute_java(classPath, fileName):
+    #print (java_file)
     #c,b=java_file.split(".")
-    cmd='java -cp /home/sid/Sid/SpringBoot/OnlineCodeCafe/src/main/resources/python/ Test'
+    cmd='java -cp ' + classPath + ' ' + fileName
    # print ("hi",c.decode("utf-8"))
     p1 = subprocess.Popen(cmd,shell=True,  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = p1.communicate()
@@ -18,4 +18,4 @@ def execute_java(java_file):
 ##    print ('This was "', stdout, '"')
    # print("After Run")
 	
-execute_java(sys.argv[1])
+execute_java(sys.argv[1], sys.argv[2])

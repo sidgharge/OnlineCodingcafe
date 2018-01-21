@@ -66,7 +66,7 @@ public class ProgramServiceImpl implements IProgramService {
 	}*/
 	
 	public String pythonJavaCompile(File javaFile) throws IOException, InterruptedException {
-		ProcessBuilder processBuilder=new ProcessBuilder("python","/home/sid/Sid/SpringBoot/OnlineCodeCafe/src/main/resources/python/JavaCompile.py", javaFile.getAbsolutePath());
+		ProcessBuilder processBuilder=new ProcessBuilder("python","/home/sid/Sid/SpringBoot/OnlineCodeCafe/src/main/resources/python/mycompile.py", javaFile.getAbsolutePath());
 		processBuilder.redirectErrorStream(true);
 		logger.debug("inside java compile code");
 
@@ -74,25 +74,26 @@ public class ProgramServiceImpl implements IProgramService {
 
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 		String data;
+		String result = "";
 		while ((data = bufferedReader.readLine()) != null) {
-		    logger.debug(data);
+		    result = result + data;
 		}
 		process.waitFor();
 
 		bufferedReader.close();
-		return data;
+		return result;
 	}
 	
 	@Override
 	public String runProgram(Program program) throws IOException, InterruptedException {
 		
-		/*BufferedWriter bufferedWriter = null;
+		BufferedWriter bufferedWriter = null;
 		FileWriter fileWriter = null;
 		File file=null;
 
 		try {
 			
-			file=new File("/home/sid/Sid/SpringBoot/OnlineCodeCafe-master/src/main/resources/python/"+program.getTitle()+".java");
+			file=new File("/home/sid/Sid/SpringBoot/OnlineCodeCafe/src/main/resources/python/"+program.getTitle()+".java");
 			
 			if(file.createNewFile()) {
 				
@@ -122,18 +123,18 @@ public class ProgramServiceImpl implements IProgramService {
 			bufferedWriter = new BufferedWriter(fileWriter);
 			bufferedWriter.write(program.getCode());
 			
-			logger.debug(" file write operation completed");*/
+			logger.debug(" file write operation completed");
 		
-		File file=new File("/home/sid/Sid/SpringBoot/OnlineCodeCafe/src/main/resources/python/"+program.getTitle()+".java");
+		//File file=new File("/home/sid/Sid/SpringBoot/OnlineCodeCafe/src/main/resources/python/"+program.getTitle()+".java");
 			
-			String status=pythonJavaCompile(file);
+			/*String status=pythonJavaCompile(file);
 			if(status!=null) {
 				return status;
 			}
 			String output=pythonJavaRun(file);
-		 return output;
+		 return output;*/
 		
-		/*} finally {
+		} finally {
 
 				if (bufferedWriter != null) {
 					
@@ -146,7 +147,14 @@ public class ProgramServiceImpl implements IProgramService {
 					fileWriter.close();
 
 				}
-		}*/
+		}
+		
+		String status=pythonJavaCompile(file);
+		if(status!=null) {
+			return status;
+		}
+		String output=pythonJavaRun(file);
+	 return output;
 	}
 
 	/*private String pythonJavaRun(File javaFile) throws IOException {
@@ -183,8 +191,10 @@ public class ProgramServiceImpl implements IProgramService {
 		
 	}*/
 	private String pythonJavaRun(File javaFile) throws IOException, InterruptedException {
-		String fileName = javaFile.getAbsolutePath().replace(".java", "");
-		ProcessBuilder processBuilder=new ProcessBuilder("python","/home/sid/Sid/SpringBoot/OnlineCodeCafe/src/main/resources/python/JavaExec.py", fileName);
+		String fileName = javaFile.getAbsolutePath();
+		String classPath = fileName.substring(0, fileName.lastIndexOf("/"));
+		String classFile = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.lastIndexOf("."));
+		ProcessBuilder processBuilder=new ProcessBuilder("python","/home/sid/Sid/SpringBoot/OnlineCodeCafe/src/main/resources/python/JavaExec.py", classPath, classFile);
 		processBuilder.redirectErrorStream(true);
 		logger.debug("inside java run code");
 		Process process = processBuilder.start();  
@@ -193,7 +203,7 @@ public class ProgramServiceImpl implements IProgramService {
 		String data;
 		String dataT="";
 		while ((data = bufferedReader.readLine()) != null) {
-			logger.debug(dataT=dataT+data);
+			dataT=dataT+data;
 		}
 		process.waitFor();
 		logger.debug(dataT);
