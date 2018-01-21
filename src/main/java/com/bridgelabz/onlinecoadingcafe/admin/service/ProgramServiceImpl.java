@@ -150,7 +150,7 @@ public class ProgramServiceImpl implements IProgramService {
 		}
 		
 		String status=pythonJavaCompile(file);
-		if(status!=null) {
+		if(!status.isEmpty()) {
 			return status;
 		}
 		String output=pythonJavaRun(file);
